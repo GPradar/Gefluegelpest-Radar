@@ -1,5 +1,6 @@
-# Lädt einmalig die Kreisgrenzen (BKG-Daten via opendatasoft, dl-de/by-2.0),
+# Lädt die Kreisgrenzen (BKG, Datenlizenz Deutschland – Namensnennung 2.0),
 # verkleinert sie und legt sie als data/kreise.geojson ab.
+# Quelle 1: opendatasoft (georef-germany-kreis), Quelle 2 (Fallback): BKG VG2500 direkt.
 name: Kreisgrenzen aktualisieren
 on:
   workflow_dispatch:
@@ -14,15 +15,35 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
-      - name: Herunterladen
-        run: curl -fsSL -o /tmp/kreise_raw.geojson "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/georef-germany-kreis/exports/geojson?lang=de"
-      - name: Verkleinern
+      - name: mapshaper installieren
+        run: npm install -g mapshaper && mapshaper -v
+      - name: Herunterladen und umwandeln
         run: |
-          npx --yes mapshaper@0.6 /tmp/kreise_raw.geojson \
-            -each 'var p = this.properties, c = p.krs_code, n = p.krs_name_short || p.krs_name; ags = Array.isArray(c) ? c[0] : c; name = Array.isArray(n) ? n[0] : n' \
-            -simplify 6% keep-shapes \
-            -o precision=0.0001 format=geojson data/kreise.geojson
+          set -x
+          mkdir -p /tmp/geo data
+          if curl -fsSL --retry 3 -o /tmp/geo/kreise.geojson "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/georef-germany-kreis/exports/geojson?lang=de" \
+             && [ "$(stat -c%s /tmp/geo/kreise.geojson)" -gt 100000 ]; then
+            echo "Quelle: opendatasoft"
+            mapshaper /tmp/geo/kreise.geojson \
+              -each 'var c = this.properties.krs_code, n = this.properties.krs_name_short || this.properties.krs_name; ags = String(Array.isArray(c) ? c[0] : c); name = String(Array.isArray(n) ? n[0] : n)' \
+              -filter-fields ags,name \
+              -simplify 6% keep-shapes \
+              -o precision=0.0001 format=geojson data/kreise.geojson
+          else
+            echo "Quelle: BKG VG2500"
+            curl -fsSL --retry 3 -o /tmp/geo/vg.zip "https://daten.gdz.bkg.bund.de/produkte/vg/vg2500/aktuell/vg2500_12-31.utm32s.shape.zip"
+            unzip -q -o /tmp/geo/vg.zip -d /tmp/geo
+            SHP=$(find /tmp/geo -iname 'VG2500_KRS.shp' | head -1)
+            echo "Datei: $SHP"
+            mapshaper "$SHP" \
+              -proj wgs84 \
+              -each 'ags = String(AGS).slice(0, 5); name = GEN' \
+              -filter-fields ags,name \
+              -simplify 10% keep-shapes \
+              -o precision=0.0001 format=geojson data/kreise.geojson
+          fi
           ls -la data/kreise.geojson
+          node -e "const g=JSON.parse(require('fs').readFileSync('data/kreise.geojson'));console.log('Kreise:',g.features.length, JSON.stringify(g.features[0].properties)); if(g.features.length<350) process.exit(1)"
       - name: Speichern
         run: |
           git config user.name "github-actions"
