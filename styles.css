@@ -1,0 +1,136 @@
+:root {
+  --bg: #f4f2ec;
+  --card: #ffffff;
+  --ink: #1d2520;
+  --muted: #66706a;
+  --line: #e2ded4;
+  --brand: #1f3b2d;
+  --accent: #2f6b4f;
+  --red: #c8372d;
+  --orange: #e08a1e;
+  --lifted: #8fb8d6;
+  --none: #e7e4dc;
+  --ok: #2f7d4f;
+  --radius: 14px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
+a { color: var(--accent); }
+h1, h2 { margin: 0 0 .5rem; line-height: 1.2; }
+h1 { font-size: 1.35rem; }
+h2 { font-size: 1.05rem; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+.pad { padding: 1rem; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+  padding: .7rem 1rem; padding-top: calc(.7rem + env(safe-area-inset-top));
+  background: var(--brand); color: #fff;
+}
+.brand { display: flex; align-items: center; gap: .5rem; font-weight: 700; }
+.stamp { font-size: .78rem; opacity: .85; text-align: right; }
+
+.banner { padding: .6rem 1rem; font-size: .9rem; }
+.banner.demo { background: #fff3cd; color: #6b4e00; border-bottom: 1px solid #f0dc9a; font-weight: 600; }
+#alerts .alert {
+  margin: .75rem 1rem 0; padding: .75rem 1rem; border-radius: var(--radius);
+  display: flex; gap: .75rem; align-items: flex-start; font-size: .95rem;
+}
+.alert.new { background: #fde8e6; border: 1px solid #f3b9b3; }
+.alert.lifted { background: #e3f1e8; border: 1px solid #a9d3b8; }
+.alert button { margin-left: auto; background: none; border: 0; font-size: 1.1rem; cursor: pointer; color: inherit; }
+
+main { max-width: 860px; margin: 0 auto; padding: .75rem 1rem; }
+.view { display: none; }
+.view.active { display: block; }
+
+.card, .status-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1rem; margin-bottom: .9rem;
+}
+.status-card { border-width: 2px; }
+.status-card.ok { border-color: var(--ok); background: #f0f8f3; }
+.status-card.warn { border-color: var(--orange); background: #fff6ea; }
+.status-card.alarm { border-color: var(--red); background: #fdf0ee; }
+.status-card .big { font-size: 1.1rem; font-weight: 700; margin: .25rem 0; }
+
+.field { display: block; margin: .6rem 0; }
+.field > span { display: block; font-size: .9rem; margin-bottom: .25rem; }
+select, input[type=range] { width: 100%; }
+select { font: inherit; padding: .55rem; border-radius: 10px; border: 1px solid var(--line); background: #fff; }
+.row { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-top: .5rem; }
+
+.btn {
+  font: inherit; font-weight: 600; cursor: pointer;
+  border: 0; border-radius: 10px; padding: .6rem 1rem;
+  background: var(--accent); color: #fff;
+}
+.btn.secondary { background: #e9efe9; color: var(--brand); }
+.btn:disabled { opacity: .55; cursor: default; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line);
+  background: #fff; font-size: 1.1rem; cursor: pointer;
+}
+
+.list .item { padding: .65rem 0; border-top: 1px solid var(--line); }
+.list .item:first-child { border-top: 0; }
+.item .title { font-weight: 600; }
+.tag { display: inline-block; font-size: .75rem; font-weight: 700; padding: .1rem .45rem; border-radius: 6px; margin-right: .35rem; vertical-align: 1px; }
+.tag.g { background: #fbe0dd; color: var(--red); }
+.tag.w { background: #fdebd2; color: #9a5a07; }
+.tag.l { background: #ddeaf4; color: #2d5f84; }
+
+.map-card { padding: .5rem; }
+.map-toolbar { display: flex; align-items: center; gap: .75rem; padding: .25rem .25rem .5rem; font-size: .9rem; flex-wrap: wrap; }
+.spacer { flex: 1; }
+.map-wrap { position: relative; width: 100%; aspect-ratio: 3 / 4; max-height: 72vh; background: #eef3f6; border-radius: 10px; overflow: hidden; touch-action: none; }
+.map-wrap svg { width: 100%; height: 100%; display: block; cursor: grab; }
+.map-wrap svg.dragging { cursor: grabbing; }
+.map-wrap path { stroke: #fff; stroke-width: .6; vector-effect: non-scaling-stroke; }
+.map-wrap path.sel { stroke: var(--brand); stroke-width: 2.5; }
+.map-wrap path.home { stroke: #111; stroke-width: 2; stroke-dasharray: 4 2; }
+.map-wrap circle.me { fill: #1565c0; stroke: #fff; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.legend { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-size: .8rem; padding: .5rem .25rem 0; color: var(--muted); }
+.sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: .3rem; vertical-align: -1px; }
+.sw-g { background: var(--red); } .sw-w { background: var(--orange); } .sw-l { background: var(--lifted); } .sw-n { background: var(--none); border: 1px solid #ccc; }
+
+table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+th, td { text-align: left; padding: .4rem .3rem; border-bottom: 1px solid var(--line); }
+th:not(:first-child), td:not(:first-child) { text-align: right; }
+.chart svg { width: 100%; height: auto; }
+
+.checklist { list-style: none; padding: 0; margin: 0; }
+.checklist li { padding: .45rem 0; border-top: 1px solid var(--line); }
+.checklist li:first-child { border-top: 0; }
+.checklist label { display: flex; gap: .6rem; align-items: flex-start; cursor: pointer; }
+.checklist input { margin-top: .25rem; width: 18px; height: 18px; flex: none; }
+.links { padding-left: 1.1rem; margin: 0; }
+.links li { margin: .3rem 0; }
+
+.tabbar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: #fff; border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tabbar button {
+  font: inherit; font-size: .72rem; background: none; border: 0; padding: .45rem 0 .5rem;
+  display: flex; flex-direction: column; align-items: center; gap: .1rem; color: var(--muted); cursor: pointer;
+}
+.tabbar button span { font-size: 1.25rem; }
+.tabbar button.active { color: var(--brand); font-weight: 700; }
+
+@media (min-width: 900px) {
+  .map-wrap { aspect-ratio: 4 / 5; }
+}
+
+.btn.install { padding: .35rem .7rem; font-size: .8rem; background: #7fbf9a; color: #10241a; margin-left: auto; }
+.topbar .stamp { margin-left: .5rem; }

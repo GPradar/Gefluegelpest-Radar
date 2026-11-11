@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geflügelpest-Radar</title>
+  <meta name="description" content="Geflügelpest (HPAI) in Deutschland: Karte nach Landkreisen, Warnungen für dein Gebiet, Statistik und Biosicherheit.">
+  <meta name="theme-color" content="#1f3b2d">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="icon.svg" alt="" width="28" height="28">
+      <span>Geflügelpest-Radar</span>
+    </div>
+    <button id="installBtn" class="btn install" type="button" hidden>📲 Installieren</button>
+    <span id="dataStamp" class="stamp">Lade Daten …</span>
+  </header>
+
+  <div id="demoBanner" class="banner demo" hidden>
+    DEMO-DATEN: Die angezeigten Fälle sind fiktiv und dienen nur zum Testen der App.
+  </div>
+  <div id="alerts"></div>
+
+  <main>
+    <!-- Mein Gebiet -->
+    <section id="view-gebiet" class="view active">
+      <div id="areaStatus" class="status-card">
+        <h1>Mein Gebiet</h1>
+        <p>Wähle deinen Landkreis, um Warnungen zu erhalten.</p>
+      </div>
+
+      <div class="card">
+        <h2>Einstellungen</h2>
+        <label class="field">
+          <span>Mein Landkreis</span>
+          <select id="kreisSelect"><option value="">– bitte wählen –</option></select>
+        </label>
+        <button id="locateBtn" class="btn secondary" type="button">📍 Standort verwenden</button>
+        <label class="field">
+          <span>Umkreis für Warnungen: <b id="radiusLabel">30</b> km</span>
+          <input id="radiusInput" type="range" min="10" max="100" step="5" value="30">
+        </label>
+        <div class="row">
+          <button id="notifyBtn" class="btn" type="button">🔔 Benachrichtigungen aktivieren</button>
+          <span id="notifyState" class="muted"></span>
+        </div>
+        <p class="muted small">Du wirst informiert, wenn in deinem Gebiet ein neuer Fall gemeldet wird <b>und</b> wenn Sperrzonen wieder aufgehoben werden. Die Daten werden täglich aktualisiert; die installierte App prüft einmal am Tag auch im Hintergrund.</p>
+      </div>
+
+      <div class="card">
+        <h2>Fälle in deinem Gebiet</h2>
+        <div id="areaList" class="list"><p class="muted">Noch kein Landkreis gewählt.</p></div>
+      </div>
+    </section>
+
+    <!-- Karte -->
+    <section id="view-karte" class="view">
+      <div class="card map-card">
+        <div class="map-toolbar">
+          <label><input type="checkbox" id="fltGefluegel" checked> Hausgeflügel</label>
+          <label><input type="checkbox" id="fltWild" checked> Wildvögel</label>
+          <span class="spacer"></span>
+          <button class="icon-btn" id="zoomIn" type="button" aria-label="Hineinzoomen">+</button>
+          <button class="icon-btn" id="zoomOut" type="button" aria-label="Herauszoomen">−</button>
+          <button class="icon-btn" id="zoomReset" type="button" aria-label="Ansicht zurücksetzen">⟲</button>
+        </div>
+        <div id="mapWrap" class="map-wrap"><p class="muted pad">Karte wird geladen …</p></div>
+        <div class="legend">
+          <span><i class="sw sw-g"></i>aktiv · Hausgeflügel</span>
+          <span><i class="sw sw-w"></i>aktiv · nur Wildvögel</span>
+          <span><i class="sw sw-l"></i>aufgehoben (letzte 30 Tage)</span>
+          <span><i class="sw sw-n"></i>keine Fälle</span>
+        </div>
+      </div>
+      <div id="kreisDetail" class="card" hidden></div>
+    </section>
+
+    <!-- Statistik -->
+    <section id="view-statistik" class="view">
+      <div class="card">
+        <h2>Fälle pro Woche</h2>
+        <div id="weekChart"></div>
+      </div>
+      <div class="card">
+        <h2>Nach Bundesland (aktuelle Saison)</h2>
+        <div id="landTable"></div>
+      </div>
+    </section>
+
+    <!-- Biosicherheit -->
+    <section id="view-schutz" class="view">
+      <div class="card">
+        <h2>Verdacht? Sofort melden</h2>
+        <p>Geflügelpest ist eine <b>anzeigepflichtige Tierseuche</b>. Bei erhöhten Tierverlusten, deutlichem Leistungsabfall oder typischen Symptomen (Apathie, Atemnot, Blaufärbung von Kamm und Kehllappen, plötzliche Todesfälle) sofort das <b>zuständige Veterinäramt</b> des Landkreises bzw. der kreisfreien Stadt informieren.</p>
+        <p>Tote Wildvögel (vor allem Wasservögel, Greifvögel, Kraniche) <b>nicht anfassen</b> und den Fund dem Veterinäramt melden.</p>
+        <p id="vetHint" class="muted small"></p>
+      </div>
+      <div class="card">
+        <h2>Biosicherheits-Checkliste</h2>
+        <ul id="checklist" class="checklist"></ul>
+        <p class="muted small">Dein Fortschritt wird nur auf diesem Gerät gespeichert.</p>
+      </div>
+      <div class="card">
+        <h2>Offizielle Informationen</h2>
+        <ul class="links">
+          <li><a href="https://tsis.fli.de/" target="_blank" rel="noopener">TSIS – Tierseucheninformationssystem (FLI)</a></li>
+          <li><a href="https://www.fli.de/de/aktuelles/tierseuchengeschehen/aviaere-influenza-ai-gefluegelpest/" target="_blank" rel="noopener">FLI – Geflügelpest: Lage &amp; Risikoeinschätzung</a></li>
+          <li><a href="https://www.gesetze-im-internet.de/geflpestschv/" target="_blank" rel="noopener">Geflügelpest-Verordnung</a></li>
+        </ul>
+      </div>
+      <div class="card small muted">
+        <h2>Hinweise</h2>
+        <p>Diese App ersetzt keine amtlichen Bekanntmachungen. Maßgeblich sind die Allgemeinverfügungen deines Landkreises (z. B. Aufstallungspflicht, Sperrzonen).</p>
+        <p>Kreisgrenzen: © GeoBasis-DE / BKG, Datenlizenz Deutschland – Namensnennung – Version 2.0.</p>
+        <p>Datenquelle: täglich recherchierte Meldungen von Landkreisen, Landesbehörden und Fachpresse (je Fall verlinkt). Unvollständigkeit möglich.</p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar" aria-label="Navigation">
+    <button data-view="gebiet" class="active" type="button"><span>🏠</span>Mein Gebiet</button>
+    <button data-view="karte" type="button"><span>🗺️</span>Karte</button>
+    <button data-view="statistik" type="button"><span>📊</span>Statistik</button>
+    <button data-view="schutz" type="button"><span>🛡️</span>Schutz</button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>

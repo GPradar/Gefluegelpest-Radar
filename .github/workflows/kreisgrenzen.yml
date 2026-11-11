@@ -1,0 +1,32 @@
+# Lädt einmalig die Kreisgrenzen (BKG-Daten via opendatasoft, dl-de/by-2.0),
+# verkleinert sie und legt sie als data/kreise.geojson ab.
+name: Kreisgrenzen aktualisieren
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/kreisgrenzen.yml']
+permissions:
+  contents: write
+jobs:
+  geo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Herunterladen
+        run: curl -fsSL -o /tmp/kreise_raw.geojson "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/georef-germany-kreis/exports/geojson?lang=de"
+      - name: Verkleinern
+        run: |
+          npx --yes mapshaper@0.6 /tmp/kreise_raw.geojson \
+            -each 'var p = this.properties, c = p.krs_code, n = p.krs_name_short || p.krs_name; ags = Array.isArray(c) ? c[0] : c; name = Array.isArray(n) ? n[0] : n' \
+            -simplify 6% keep-shapes \
+            -o precision=0.0001 format=geojson data/kreise.geojson
+          ls -la data/kreise.geojson
+      - name: Speichern
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add data/kreise.geojson
+          git diff --cached --quiet || git commit -m "Kreisgrenzen aktualisiert"
+          git push

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Geflügelpest-Radar – Datenpflege</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { padding-bottom: 2rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .6rem; }
+    input[type=text], input[type=date], input[type=url], select { width: 100%; font: inherit; padding: .5rem; border: 1px solid var(--line); border-radius: 8px; }
+    textarea { width: 100%; height: 220px; font: 12px/1.4 ui-monospace, monospace; }
+    td button { font-size: .8rem; }
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="brand"><img src="icon.svg" alt="" width="28" height="28"><span>Datenpflege</span></div></header>
+  <main>
+    <div class="card">
+      <h2>1. Aktuelle Daten</h2>
+      <p class="small muted">Lädt <code>data/outbreaks.json</code>. Änderungen hier gelten erst, wenn du die neue Datei hochlädst (Schritt 3).</p>
+      <label class="row"><input type="checkbox" id="demo"> Demo-Daten (Banner in der App anzeigen)</label>
+      <div id="tbl" class="list"></div>
+    </div>
+
+    <div class="card">
+      <h2>2. Fall hinzufügen</h2>
+      <form id="f" class="grid">
+        <label>Kreisschlüssel (AGS)<input type="text" name="ags" pattern="\d{5}" required placeholder="06631"></label>
+        <label>Kategorie<select name="kategorie"><option value="gefluegel">Hausgeflügel</option><option value="wildvogel">Wildvogel</option></select></label>
+        <label>Tierart<input type="text" name="tierart" placeholder="Legehennen"></label>
+        <label>Subtyp<input type="text" name="subtyp" value="H5N1"></label>
+        <label>Festgestellt am<input type="date" name="festgestellt_am" required></label>
+        <label>Aufgehoben am<input type="date" name="aufgehoben_am"></label>
+        <label style="grid-column: 1 / -1">Quelle (Link)<input type="url" name="quelle" placeholder="https://…"></label>
+        <div><button class="btn" type="submit">Hinzufügen</button></div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>3. Neue Datei veröffentlichen</h2>
+      <p class="small muted">Inhalt kopieren und als <code>data/outbreaks.json</code> im Projekt speichern, dann neu deployen (bei GitHub + Netlify/Cloudflare reicht ein Commit).</p>
+      <div class="row"><button class="btn" id="copy" type="button">JSON kopieren</button><span id="copied" class="muted small"></span></div>
+      <textarea id="out" readonly></textarea>
+    </div>
+  </main>
+<script>
+'use strict';
+let data = { meta: {}, faelle: [] };
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function render() {
+  data.meta.stand = new Date().toISOString();
+  data.meta.demo = $('#demo').checked;
+  const rows = [...data.faelle].sort((a, b) => (b.festgestellt_am || '').localeCompare(a.festgestellt_am || ''));
+  $('#tbl').innerHTML = `<table><thead><tr><th>ID</th><th>AGS</th><th>Art</th><th>festgestellt</th><th>aufgehoben</th><th></th></tr></thead><tbody>${
+    rows.map((o) => `<tr><td>${esc(o.id)}</td><td>${esc(o.ags)}</td><td>${o.kategorie === 'wildvogel' ? 'Wildvogel' : 'Geflügel'}</td>
+      <td>${esc(o.festgestellt_am)}</td>
+      <td><input type="date" value="${esc(o.aufgehoben_am || '')}" data-id="${esc(o.id)}" class="lift"></td>
+      <td><button type="button" data-del="${esc(o.id)}">löschen</button></td></tr>`).join('')}</tbody></table>`;
+  $('#out').value = JSON.stringify(data, null, 2);
+}
+
+$('#tbl').addEventListener('change', (e) => {
+  if (!e.target.classList.contains('lift')) return;
+  const o = data.faelle.find((x) => x.id === e.target.dataset.id); o.aufgehoben_am = e.target.value || null; render();
+});
+$('#tbl').addEventListener('click', (e) => {
+  const id = e.target.dataset.del; if (!id) return;
+  if (e.target.textContent !== 'sicher?') { e.target.textContent = 'sicher?'; return; }
+  data.faelle = data.faelle.filter((x) => x.id !== id); render();
+});
+$('#demo').onchange = render;
+$('#f').onsubmit = (e) => {
+  e.preventDefault();
+  const fd = Object.fromEntries(new FormData(e.target));
+  const id = 'gp-' + fd.festgestellt_am.replaceAll('-', '') + '-' + fd.ags + '-' + Math.random().toString(36).slice(2, 6);
+  data.faelle.push({ id, ags: fd.ags, kategorie: fd.kategorie, tierart: fd.tierart, subtyp: fd.subtyp,
+    festgestellt_am: fd.festgestellt_am, aufgehoben_am: fd.aufgehoben_am || null, quelle: fd.quelle || null });
+  e.target.reset(); render();
+};
+$('#copy').onclick = async () => {
+  try { await navigator.clipboard.writeText($('#out').value); $('#copied').textContent = 'kopiert ✓'; }
+  catch { $('#out').select(); $('#copied').textContent = 'Bitte manuell kopieren (Strg+C)'; }
+};
+fetch('data/outbreaks.json', { cache: 'no-cache' }).then((r) => r.json())
+  .then((d) => { data = d; data.meta ??= {}; data.faelle ??= []; $('#demo').checked = !!data.meta.demo; render(); })
+  .catch(() => render());
+</script>
+</body>
+</html>
