@@ -1,6 +1,6 @@
 # Geflügelpest-Radar
 
-**App:** https://gpradar.github.io/gefluegelpest-radar/ – auf Android in Chrome öffnen → „App installieren“.
+**App:** https://gpradar.github.io/Gefluegelpest-Radar/ – auf Android in Chrome öffnen → „App installieren“.
 
 Die Falldaten (`data/outbreaks.json`) werden täglich automatisch aktualisiert. Kreisgrenzen erzeugt der Workflow „Kreisgrenzen aktualisieren“ (Tab *Actions*).
 
