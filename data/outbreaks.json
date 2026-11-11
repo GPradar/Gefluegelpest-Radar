@@ -1,7 +1,7 @@
 {
   "meta": {
     "demo": false,
-    "stand": "2026-11-11T20:00:00+01:00",
+    "stand": "2026-11-11T20:30:00+01:00",
     "hinweis": "Abgleich mit FLI-Risikoeinschätzung vom 06.11.2026 sowie Landes- und Kreismeldungen. ND 2026: Bayern vollständig (LGL), Brandenburg bis 31.03.2026; spätere ND-Ausbrüche in Brandenburg (April/Mai) noch unvollständig. Wildvogelfälle nur, soweit ein Landkreis genannt ist.",
     "felder": {
       "seuche": "hpai = Geflügelpest (aviäre Influenza) | nd = Newcastle-Krankheit",
@@ -139,10 +139,10 @@
       "kategorie": "gefluegel",
       "tierart": "Geflügelhaltung auf einer Hallig (22 Tiere verendet)",
       "subtyp": null,
-      "festgestellt_am": "2026-10-26",
+      "festgestellt_am": "2026-10-21",
       "aufgehoben_am": null,
       "quelle": "https://www.topagrar.com/gefluegel/schleswig-holstein-verhangt-landesweite-schutzmassnahmen-drei-vogelgrippefallen-b-20030581.html",
-      "hinweis": "Datum ungefähr: Meldung vom 26.10.2026; Hallig nicht namentlich genannt.",
+      "hinweis": "Datum laut EU-Meldesystem ADIS (EURL Avian Flu Data Portal): 21.10.2026, Kategorie Hobbyhaltung; Hallig nicht namentlich genannt.",
       "seuche": "hpai"
     },
     {
