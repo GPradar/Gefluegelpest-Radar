@@ -12,7 +12,8 @@ const CONFIG = {
   recentlyLiftedDays: 30,
   refreshMinutes: 30,
   // Mindestdauer der Überwachungszone nach EU-VO 2020/687 (nur Schätzung, falls kein Aufhebungsdatum bekannt)
-  estZoneDays: 30
+  estZoneDays: 30,
+  archiveDays: 30   // aufgehobene Fälle verschwinden nach so vielen Tagen von Karte und Liste (bleiben im Archiv)
 };
 
 const LAENDER = {
@@ -51,7 +52,7 @@ const state = {
   settings: Object.assign({ ags: '', lat: null, lon: null, radius: CONFIG.defaultRadiusKm, notify: false },
                           store.get('settings', {})),
   selected: null,
-  filter: { g: true, w: true },
+  filter: { g: true, w: true, n: true },
   view: { x: 0, y: 0, w: 1, h: 1 },
   home: null
 };
@@ -61,7 +62,11 @@ const parseDate = (s) => s ? new Date(s + 'T00:00:00') : null;
 const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
 const fmtDate = (d) => d ? d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '–';
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const isGefluegel = (o) => o.kategorie !== 'wildvogel';
+const isND = (o) => o.seuche === 'nd';
+const isGefluegel = (o) => !isND(o) && o.kategorie !== 'wildvogel';
+/** Kategorie für Farben/Filter: g = Geflügelpest Hausgeflügel, w = Geflügelpest Wildvogel, n = Newcastle */
+const cat = (o) => isND(o) ? 'n' : isGefluegel(o) ? 'g' : 'w';
+const seucheName = (o) => isND(o) ? 'Newcastle-Krankheit' : 'Geflügelpest';
 
 function haversine(lat1, lon1, lat2, lon2) {
   const r = Math.PI / 180, R = 6371;
@@ -81,6 +86,7 @@ function statusOf(o) {
   const lifted = liftDate(o);
   return lifted && lifted <= today() ? 'aufgehoben' : 'aktiv';
 }
+const isArchived = (o) => statusOf(o) === 'aufgehoben' && today() - liftDate(o) > CONFIG.archiveDays * DAY;
 
 /* ---------- Geodaten ---------- */
 function pickProp(props, keys) {
@@ -163,10 +169,10 @@ function homePoint() {
 }
 
 /** Fälle im Gebiet: eigener Kreis + Fälle, deren Kreis-Mittelpunkt (oder Koordinate) im Umkreis liegt */
-function areaOutbreaks() {
+function areaOutbreaks(includeArchived = false) {
   const s = state.settings, hp = homePoint();
   if (!hp) return [];
-  return state.outbreaks.map((o) => {
+  return state.outbreaks.filter((o) => includeArchived || !isArchived(o)).map((o) => {
     const k = state.byAgs.get(o.ags);
     const lat = o.lat ?? k?.centroid[1], lon = o.lon ?? k?.centroid[0];
     const dist = lat != null ? haversine(hp[1], hp[0], lat, lon) : Infinity;
@@ -178,7 +184,7 @@ function areaOutbreaks() {
 /** Vergleicht mit dem letzten bekannten Stand und meldet neue Fälle und Aufhebungen. */
 function detectChanges() {
   if (!state.settings.ags) return [];
-  const area = areaOutbreaks();
+  const area = areaOutbreaks(true);
   const prev = store.get('known', null); // { id: 'aktiv'|'aufgehoben' }
   const now = {};
   const events = [];
@@ -198,9 +204,9 @@ function detectChanges() {
 function kreisName(ags) { return state.byAgs.get(ags)?.name || ags; }
 
 function eventText(ev) {
-  const art = isGefluegel(ev.o) ? 'Hausgeflügel' : 'Wildvogel';
+  const art = isND(ev.o) ? 'Newcastle-Krankheit' : isGefluegel(ev.o) ? 'Hausgeflügel' : 'Wildvogel';
   return ev.type === 'new'
-    ? { title: 'Neuer Geflügelpest-Fall in deinem Gebiet', body: `${art}, ${kreisName(ev.o.ags)} (festgestellt ${fmtDate(parseDate(ev.o.festgestellt_am))})` }
+    ? { title: `Neuer ${seucheName(ev.o)}-Fall in deinem Gebiet`, body: `${art}, ${kreisName(ev.o.ags)} (festgestellt ${fmtDate(parseDate(ev.o.festgestellt_am))})` }
     : { title: 'Entwarnung: Sperrzone aufgehoben', body: `${art}, ${kreisName(ev.o.ags)} – ${ev.o.aufgehoben_am ? 'aufgehoben am ' + fmtDate(parseDate(ev.o.aufgehoben_am)) : 'vermutlich seit ca. ' + fmtDate(estLift(ev.o)) + ' (Schätzung)'}` };
 }
 
@@ -226,8 +232,8 @@ async function notify(events) {
 /* ---------- Rendering: Mein Gebiet ---------- */
 function outbreakItem(o, extra = '') {
   const st = statusOf(o);
-  const tag = st === 'aufgehoben' ? '<span class="tag l">aufgehoben</span>'
-    : isGefluegel(o) ? '<span class="tag g">Hausgeflügel</span>' : '<span class="tag w">Wildvogel</span>';
+  const kind = { g: '<span class="tag g">Hausgeflügel</span>', w: '<span class="tag w">Wildvogel</span>', n: '<span class="tag n">Newcastle (ND)</span>' }[cat(o)];
+  const tag = st === 'aufgehoben' ? `<span class="tag l">aufgehoben</span>${isND(o) ? '<span class="tag n">ND</span>' : ''}` : kind;
   const lift = st === 'aufgehoben'
     ? (o.aufgehoben_am ? `Aufgehoben am ${fmtDate(parseDate(o.aufgehoben_am))}` : `Vermutlich abgelaufen seit ca. ${fmtDate(estLift(o))} (Schätzung – amtliche Aufhebung nicht bekannt)`)
     : o.aufgehoben_am ? `Aufhebung geplant: ${fmtDate(parseDate(o.aufgehoben_am))}`
@@ -275,9 +281,10 @@ const LAT0 = 51.2, KX = Math.cos(LAT0 * Math.PI / 180);
 const proj = (lon, lat) => [lon * KX, -lat];
 
 function kreisColor(ags) {
-  const list = state.outbreaks.filter((o) => o.ags === ags && (isGefluegel(o) ? state.filter.g : state.filter.w));
+  const list = state.outbreaks.filter((o) => o.ags === ags && !isArchived(o) && state.filter[cat(o)]);
   const active = list.filter((o) => statusOf(o) === 'aktiv');
   if (active.some(isGefluegel)) return 'var(--red)';
+  if (active.some(isND)) return 'var(--nd)';
   if (active.length) return 'var(--orange)';
   const recent = list.some((o) => statusOf(o) === 'aufgehoben' && today() - liftDate(o) <= CONFIG.recentlyLiftedDays * DAY);
   return recent ? 'var(--lifted)' : 'var(--none)';
@@ -381,13 +388,13 @@ function weekStart(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); x.setDate
 
 function renderStats() {
   const weeks = 12, end = weekStart(today()), start = new Date(end.getTime() - (weeks - 1) * 7 * DAY);
-  const bins = Array.from({ length: weeks }, (_, i) => ({ d: new Date(start.getTime() + i * 7 * DAY), g: 0, w: 0 }));
+  const bins = Array.from({ length: weeks }, (_, i) => ({ d: new Date(start.getTime() + i * 7 * DAY), g: 0, w: 0, n: 0 }));
   for (const o of state.outbreaks) {
     const d = parseDate(o.festgestellt_am); if (!d) continue;
     const i = Math.floor((weekStart(d) - start) / (7 * DAY));
-    if (i >= 0 && i < weeks) bins[i][isGefluegel(o) ? 'g' : 'w']++;
+    if (i >= 0 && i < weeks) bins[i][cat(o)]++;
   }
-  const max = Math.max(1, ...bins.map((b) => b.g + b.w));
+  const max = Math.max(1, ...bins.map((b) => b.g + b.w + b.n));
   const W = 420, H = 210, pl = 26, pb = 30, bw = (W - pl) / weeks;
   const y = (v) => (H - pb) - v / max * (H - pb - 10);
   const ticks = [0, Math.ceil(max / 2), max].filter((v, i, a) => a.indexOf(v) === i);
@@ -396,25 +403,31 @@ function renderStats() {
     const x = pl + i * bw + 3, w = bw - 6;
     if (b.g) svg += `<rect x="${x}" y="${y(b.g)}" width="${w}" height="${y(0) - y(b.g)}" fill="#c8372d" rx="2"><title>KW ab ${fmtDate(b.d)}: ${b.g} Hausgeflügel</title></rect>`;
     if (b.w) svg += `<rect x="${x}" y="${y(b.g + b.w)}" width="${w}" height="${y(b.g) - y(b.g + b.w)}" fill="#e08a1e" rx="2"><title>KW ab ${fmtDate(b.d)}: ${b.w} Wildvögel</title></rect>`;
+    if (b.n) svg += `<rect x="${x}" y="${y(b.g + b.w + b.n)}" width="${w}" height="${y(b.g + b.w) - y(b.g + b.w + b.n)}" fill="#7b4fb3" rx="2"><title>KW ab ${fmtDate(b.d)}: ${b.n} Newcastle</title></rect>`;
     if (i % 3 === 0) svg += `<text x="${x + w / 2}" y="${H - 14}" font-size="11" text-anchor="middle" fill="#66706a">${b.d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}</text>`;
   });
   $('#weekChart').innerHTML = `<div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Fälle pro Woche">${svg}</svg></div>
-    <div class="legend"><span><i class="sw sw-g"></i>Hausgeflügel</span><span><i class="sw sw-w"></i>Wildvögel</span></div>`;
+    <div class="legend"><span><i class="sw sw-g"></i>Hausgeflügel</span><span><i class="sw sw-w"></i>Wildvögel</span><span><i class="sw sw-nd"></i>Newcastle (ND)</span></div>`;
 
   const ss = seasonStart(), rows = {};
   for (const o of state.outbreaks) {
     const d = parseDate(o.festgestellt_am); if (!d || d < ss) continue;
     const land = LAENDER[o.ags.slice(0, 2)] || 'unbekannt';
-    rows[land] ??= { g: 0, w: 0, a: 0 };
-    rows[land][isGefluegel(o) ? 'g' : 'w']++;
+    rows[land] ??= { g: 0, w: 0, n: 0, a: 0 };
+    rows[land][cat(o)]++;
     if (statusOf(o) === 'aktiv') rows[land].a++;
   }
-  const entries = Object.entries(rows).sort((a, b) => (b[1].g + b[1].w) - (a[1].g + a[1].w));
+  const entries = Object.entries(rows).sort((a, b) => (b[1].g + b[1].w + b[1].n) - (a[1].g + a[1].w + a[1].n));
   $('#landTable').innerHTML = entries.length
-    ? `<table><thead><tr><th>Bundesland</th><th>Hausgeflügel</th><th>Wildvögel</th><th>aktiv</th></tr></thead><tbody>${
-        entries.map(([l, r]) => `<tr><td>${esc(l)}</td><td>${r.g}</td><td>${r.w}</td><td>${r.a}</td></tr>`).join('')}</tbody></table>
+    ? `<table><thead><tr><th>Bundesland</th><th>GP Haus&shy;geflügel</th><th>GP Wild&shy;vögel</th><th>ND</th><th>aktiv</th></tr></thead><tbody>${
+        entries.map(([l, r]) => `<tr><td>${esc(l)}</td><td>${r.g}</td><td>${r.w}</td><td>${r.n}</td><td>${r.a}</td></tr>`).join('')}</tbody></table>
        <p class="muted small">Saison ab ${fmtDate(ss)}.</p>`
     : '<p class="muted">Keine Fälle in dieser Saison.</p>';
+
+  const arch = state.outbreaks.filter(isArchived).sort((a, b) => (b.festgestellt_am || '').localeCompare(a.festgestellt_am || ''));
+  $('#archiveList').innerHTML = arch.length
+    ? `<details><summary>${arch.length} archivierte${arch.length === 1 ? 'r Fall' : ' Fälle'} anzeigen</summary><div class="list">${arch.map((o) => outbreakItem(o)).join('')}</div></details>`
+    : '<p class="muted">Noch keine archivierten Fälle.</p>';
 }
 
 /* ---------- Biosicherheit ---------- */
@@ -553,6 +566,7 @@ async function init() {
   const h = location.hash.slice(1); if (['gebiet', 'karte', 'statistik', 'schutz'].includes(h)) switchView(h);
   $('#fltGefluegel').onchange = (e) => { state.filter.g = e.target.checked; renderMap(); };
   $('#fltWild').onchange = (e) => { state.filter.w = e.target.checked; renderMap(); };
+  $('#fltND').onchange = (e) => { state.filter.n = e.target.checked; renderMap(); };
   $('#zoomIn').onclick = () => zoom(1 / 1.4);
   $('#zoomOut').onclick = () => zoom(1.4);
   $('#zoomReset').onclick = () => { state.view = { ...state.home }; applyView(); };

@@ -64,6 +64,7 @@
         <div class="map-toolbar">
           <label><input type="checkbox" id="fltGefluegel" checked> Hausgeflügel</label>
           <label><input type="checkbox" id="fltWild" checked> Wildvögel</label>
+          <label><input type="checkbox" id="fltND" checked> Newcastle</label>
           <span class="spacer"></span>
           <button class="icon-btn" id="zoomIn" type="button" aria-label="Hineinzoomen">+</button>
           <button class="icon-btn" id="zoomOut" type="button" aria-label="Herauszoomen">−</button>
@@ -73,6 +74,7 @@
         <div class="legend">
           <span><i class="sw sw-g"></i>aktiv · Hausgeflügel</span>
           <span><i class="sw sw-w"></i>aktiv · nur Wildvögel</span>
+          <span><i class="sw sw-nd"></i>aktiv · Newcastle (ND)</span>
           <span><i class="sw sw-l"></i>aufgehoben (letzte 30 Tage)</span>
           <span><i class="sw sw-n"></i>keine Fälle</span>
         </div>
@@ -90,13 +92,18 @@
         <h2>Nach Bundesland (aktuelle Saison)</h2>
         <div id="landTable"></div>
       </div>
+      <div class="card">
+        <h2>Archiv</h2>
+        <p class="muted small">Fälle, deren Sperrzone seit mehr als 30 Tagen aufgehoben ist. Sie zählen weiter in der Statistik, erscheinen aber nicht mehr auf Karte und in deinem Gebiet.</p>
+        <div id="archiveList"></div>
+      </div>
     </section>
 
     <!-- Biosicherheit -->
     <section id="view-schutz" class="view">
       <div class="card">
         <h2>Verdacht? Sofort melden</h2>
-        <p>Geflügelpest ist eine <b>anzeigepflichtige Tierseuche</b>. Bei erhöhten Tierverlusten, deutlichem Leistungsabfall oder typischen Symptomen (Apathie, Atemnot, Blaufärbung von Kamm und Kehllappen, plötzliche Todesfälle) sofort das <b>zuständige Veterinäramt</b> des Landkreises bzw. der kreisfreien Stadt informieren.</p>
+        <p>Geflügelpest und Newcastle-Krankheit (atypische Geflügelpest) sind <b>anzeigepflichtige Tierseuchen</b>. Bei erhöhten Tierverlusten, deutlichem Leistungsabfall oder typischen Symptomen (Apathie, Atemnot, Blaufärbung von Kamm und Kehllappen, plötzliche Todesfälle) sofort das <b>zuständige Veterinäramt</b> des Landkreises bzw. der kreisfreien Stadt informieren.</p>
         <p>Tote Wildvögel (vor allem Wasservögel, Greifvögel, Kraniche) <b>nicht anfassen</b> und den Fund dem Veterinäramt melden.</p>
         <p id="vetHint" class="muted small"></p>
       </div>

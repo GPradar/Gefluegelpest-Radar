@@ -1,5 +1,5 @@
 /* Service Worker: Offline-Modus, tägliche Hintergrund-Prüfung, Benachrichtigungen */
-const CACHE = 'gpr-v2';
+const CACHE = 'gpr-v3';
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'icon.svg', 'icon-192.png', 'manifest.webmanifest'];
 const CTX_KEY = 'gpr-context'; // Einstellungen + bekannter Stand, von der App übergeben
 
@@ -67,7 +67,7 @@ async function backgroundCheck() {
     const st = ld && ld <= today ? 'aufgehoben' : 'aktiv';
     now[o.id] = st;
     const name = ctx.names[ags] || ags;
-    if (ctx.known && !(o.id in ctx.known) && st === 'aktiv') events.push({ t: 'Neuer Geflügelpest-Fall in deinem Gebiet', b: `${o.kategorie === 'wildvogel' ? 'Wildvogel' : 'Hausgeflügel'}, ${name}`, tag: o.id + 'new' });
+    if (ctx.known && !(o.id in ctx.known) && st === 'aktiv') events.push({ t: `Neuer ${o.seuche === 'nd' ? 'Newcastle' : 'Geflügelpest'}-Fall in deinem Gebiet`, b: `${o.seuche === 'nd' ? 'Newcastle-Krankheit' : o.kategorie === 'wildvogel' ? 'Wildvogel' : 'Hausgeflügel'}, ${name}`, tag: o.id + 'new' });
     if (ctx.known?.[o.id] === 'aktiv' && st === 'aufgehoben') events.push({ t: 'Entwarnung: Sperrzone aufgehoben', b: `${name}${o.aufgehoben_am ? '' : ' (geschätzt)'}`, tag: o.id + 'lifted' });
   }
   ctx.known = now;

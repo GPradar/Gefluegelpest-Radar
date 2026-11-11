@@ -2,7 +2,16 @@
   "meta": {
     "demo": false,
     "stand": "2026-11-03T21:00:00+01:00",
-    "hinweis": "Manuell recherchiert aus Veröffentlichungen von Landkreisen und Fachpresse (Saison ab 22.09.2026). Unvollständig: Einzelne Wildvogelfunde ohne Kreisangabe sind nicht enthalten. Aufhebungsdaten sind nicht bekannt und werden geschätzt."
+    "hinweis": "Manuell recherchiert aus Veröffentlichungen von Landkreisen und Fachpresse (Saison ab 22.09.2026). Unvollständig: Einzelne Wildvogelfunde ohne Kreisangabe sind nicht enthalten. Aufhebungsdaten sind nicht bekannt und werden geschätzt.",
+    "felder": {
+      "seuche": "hpai = Geflügelpest (aviäre Influenza) | nd = Newcastle-Krankheit",
+      "kategorie": "gefluegel (inkl. gehaltene Vögel) | wildvogel",
+      "ags": "5-stelliger Kreisschlüssel",
+      "festgestellt_am": "JJJJ-MM-TT",
+      "aufgehoben_am": "JJJJ-MM-TT oder null",
+      "quelle": "URL",
+      "hinweis": "optional"
+    }
   },
   "faelle": [
     {
@@ -14,7 +23,8 @@
       "festgestellt_am": "2026-11-03",
       "aufgehoben_am": null,
       "quelle": "https://www.landkreis-aurich.de/aktuelle-beitraege/gefluegelpest-im-landkreis-aurich-ausgebrochen/",
-      "hinweis": "Schutz- und Überwachungszone eingerichtet."
+      "hinweis": "Schutz- und Überwachungszone eingerichtet.",
+      "seuche": "hpai"
     },
     {
       "id": "gp-20261026-01059-wanderup",
@@ -25,7 +35,8 @@
       "festgestellt_am": "2026-10-26",
       "aufgehoben_am": null,
       "quelle": "https://www.topagrar.com/gefluegel/schleswig-holstein-verhangt-landesweite-schutzmassnahmen-drei-vogelgrippefallen-20030581.html",
-      "hinweis": "Datum ungefähr: Meldung vom 26.10.2026, genaues Feststellungsdatum nicht veröffentlicht (Ausbrüche in SH seit 21.10.)."
+      "hinweis": "Datum ungefähr: Meldung vom 26.10.2026, genaues Feststellungsdatum nicht veröffentlicht (Ausbrüche in SH seit 21.10.).",
+      "seuche": "hpai"
     },
     {
       "id": "gp-20261024-01060-bark",
@@ -36,7 +47,8 @@
       "festgestellt_am": "2026-10-24",
       "aufgehoben_am": null,
       "quelle": "https://www.topagrar.com/gefluegel/schleswig-holstein-verhangt-landesweite-schutzmassnahmen-drei-vogelgrippefallen-20030581.html",
-      "hinweis": "Datum ungefähr: Bestand am 24.10.2026 getötet, Feststellung zwischen 21. und 24.10."
+      "hinweis": "Datum ungefähr: Bestand am 24.10.2026 getötet, Feststellung zwischen 21. und 24.10.",
+      "seuche": "hpai"
     },
     {
       "id": "gp-20261026-01054-hallig",
@@ -47,7 +59,8 @@
       "festgestellt_am": "2026-10-26",
       "aufgehoben_am": null,
       "quelle": "https://www.topagrar.com/gefluegel/schleswig-holstein-verhangt-landesweite-schutzmassnahmen-drei-vogelgrippefallen-b-20030581.html",
-      "hinweis": "Datum ungefähr: Meldung vom 26.10.2026; Hallig nicht namentlich genannt."
+      "hinweis": "Datum ungefähr: Meldung vom 26.10.2026; Hallig nicht namentlich genannt.",
+      "seuche": "hpai"
     },
     {
       "id": "gp-20261026-01054-pfeifenten",
@@ -58,7 +71,8 @@
       "festgestellt_am": "2026-10-26",
       "aufgehoben_am": null,
       "quelle": "https://www.topagrar.com/gefluegel/schleswig-holstein-verhangt-landesweite-schutzmassnahmen-drei-vogelgrippefallen-b-20030581.html",
-      "hinweis": "Datum ungefähr; Fundort am Deich im Wattenmeer."
+      "hinweis": "Datum ungefähr; Fundort am Deich im Wattenmeer.",
+      "seuche": "hpai"
     },
     {
       "id": "gp-20261020-01051-grossenrade",
@@ -69,7 +83,8 @@
       "festgestellt_am": "2026-10-20",
       "aufgehoben_am": null,
       "quelle": "https://www.topagrar.com/gefluegel/schleswig-holstein-verhangt-landesweite-schutzmassnahmen-drei-vogelgrippefallen-20030581.html",
-      "hinweis": "H5-Nachweis; Neuraminidase-Typ nicht genannt."
+      "hinweis": "H5-Nachweis; Neuraminidase-Typ nicht genannt.",
+      "seuche": "hpai"
     },
     {
       "id": "gp-20260922-03405-gnadenhof",
@@ -80,7 +95,8 @@
       "festgestellt_am": "2026-09-22",
       "aufgehoben_am": null,
       "quelle": "https://www.topagrar.com/gefluegel/schleswig-holstein-verhangt-landesweite-schutzmassnahmen-drei-vogelgrippefallen-20030581.html",
-      "hinweis": "Nachweis bei neu aufgenommenen Tieren; Angaben zu Sperrmaßnahmen in den Quellen widersprüchlich."
+      "hinweis": "Nachweis bei neu aufgenommenen Tieren; Angaben zu Sperrmaßnahmen in den Quellen widersprüchlich.",
+      "seuche": "hpai"
     }
   ]
 }

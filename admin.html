@@ -28,6 +28,7 @@
       <h2>2. Fall hinzufügen</h2>
       <form id="f" class="grid">
         <label>Kreisschlüssel (AGS)<input type="text" name="ags" pattern="\d{5}" required placeholder="06631"></label>
+        <label>Seuche<select name="seuche"><option value="hpai">Geflügelpest (HPAI)</option><option value="nd">Newcastle-Krankheit (ND)</option></select></label>
         <label>Kategorie<select name="kategorie"><option value="gefluegel">Hausgeflügel</option><option value="wildvogel">Wildvogel</option></select></label>
         <label>Tierart<input type="text" name="tierart" placeholder="Legehennen"></label>
         <label>Subtyp<input type="text" name="subtyp" value="H5N1"></label>
@@ -56,7 +57,7 @@ function render() {
   data.meta.demo = $('#demo').checked;
   const rows = [...data.faelle].sort((a, b) => (b.festgestellt_am || '').localeCompare(a.festgestellt_am || ''));
   $('#tbl').innerHTML = `<table><thead><tr><th>ID</th><th>AGS</th><th>Art</th><th>festgestellt</th><th>aufgehoben</th><th></th></tr></thead><tbody>${
-    rows.map((o) => `<tr><td>${esc(o.id)}</td><td>${esc(o.ags)}</td><td>${o.kategorie === 'wildvogel' ? 'Wildvogel' : 'Geflügel'}</td>
+    rows.map((o) => `<tr><td>${esc(o.id)}</td><td>${esc(o.ags)}</td><td>${o.seuche === 'nd' ? 'ND' : 'GP'} · ${o.kategorie === 'wildvogel' ? 'Wildvogel' : 'Geflügel'}</td>
       <td>${esc(o.festgestellt_am)}</td>
       <td><input type="date" value="${esc(o.aufgehoben_am || '')}" data-id="${esc(o.id)}" class="lift"></td>
       <td><button type="button" data-del="${esc(o.id)}">löschen</button></td></tr>`).join('')}</tbody></table>`;
@@ -77,7 +78,7 @@ $('#f').onsubmit = (e) => {
   e.preventDefault();
   const fd = Object.fromEntries(new FormData(e.target));
   const id = 'gp-' + fd.festgestellt_am.replaceAll('-', '') + '-' + fd.ags + '-' + Math.random().toString(36).slice(2, 6);
-  data.faelle.push({ id, ags: fd.ags, kategorie: fd.kategorie, tierart: fd.tierart, subtyp: fd.subtyp,
+  data.faelle.push({ id, ags: fd.ags, seuche: fd.seuche, kategorie: fd.kategorie, tierart: fd.tierart, subtyp: fd.subtyp,
     festgestellt_am: fd.festgestellt_am, aufgehoben_am: fd.aufgehoben_am || null, quelle: fd.quelle || null });
   e.target.reset(); render();
 };

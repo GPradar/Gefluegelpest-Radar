@@ -134,3 +134,7 @@ th:not(:first-child), td:not(:first-child) { text-align: right; }
 
 .btn.install { padding: .35rem .7rem; font-size: .8rem; background: #7fbf9a; color: #10241a; margin-left: auto; }
 .topbar .stamp { margin-left: .5rem; }
+.tag.n { background: #ebe1f6; color: #5b3590; }
+.sw-nd { background: var(--nd); }
+:root { --nd: #7b4fb3; }
+details summary { cursor: pointer; color: var(--accent); font-weight: 600; margin: .25rem 0 .5rem; }
