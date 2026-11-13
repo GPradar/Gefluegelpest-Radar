@@ -1,7 +1,7 @@
 {
   "meta": {
     "demo": false,
-    "stand": "2026-11-12T06:15:00+01:00",
+    "stand": "2026-11-13T05:56:25+01:00",
     "hinweis": "Abgleich mit FLI-Risikoeinschätzung vom 06.11.2026 sowie Landes- und Kreismeldungen. ND 2026: Bayern vollständig (LGL), Brandenburg bis 31.03.2026; spätere ND-Ausbrüche in Brandenburg (April/Mai) noch unvollständig. Wildvogelfälle nur, soweit ein Landkreis genannt ist.",
     "felder": {
       "seuche": "hpai = Geflügelpest (aviäre Influenza) | nd = Newcastle-Krankheit",
@@ -14,6 +14,18 @@
     }
   },
   "faelle": [
+    {
+      "id": "gp-20261112-12073-kutzerow",
+      "ags": "12073",
+      "seuche": "hpai",
+      "kategorie": "gefluegel",
+      "tierart": "Legehennen (ca. 39.000 Tiere), Uckerland OT Kutzerow",
+      "subtyp": "H5N1",
+      "festgestellt_am": "2026-11-12",
+      "aufgehoben_am": null,
+      "quelle": "https://mleuv.brandenburg.de/mleuv/de/aktuelles/presseinformationen/detail/~12-11-2026-gefluegelpest-uckermark",
+      "hinweis": "Amtlich festgestellt am 12.11.2026 (FLI-Bestätigung), Bestand getötet; siehe auch https://www.uckermark.de/Service-Aktuelles/Aktuelle-Informationen/Gefl%C3%BCgelpest-in-einem-Betrieb-in-der-Uckermark-ausgebrochen.php?ModID=255&FID=3615.11260.1"
+    },
     {
       "id": "gp-20261110-12063-milowerland",
       "ags": "12063",
