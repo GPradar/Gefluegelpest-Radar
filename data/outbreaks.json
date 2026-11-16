@@ -1,7 +1,7 @@
 {
   "meta": {
     "demo": false,
-    "stand": "2026-11-15T05:56:10+01:00",
+    "stand": "2026-11-16T05:58:28+01:00",
     "hinweis": "Abgleich mit FLI-Risikoeinschätzung vom 06.11.2026 sowie Landes- und Kreismeldungen. ND 2026: Bayern vollständig (LGL), Brandenburg bis 31.03.2026; spätere ND-Ausbrüche in Brandenburg (April/Mai) noch unvollständig. Wildvogelfälle nur, soweit ein Landkreis genannt ist.",
     "felder": {
       "seuche": "hpai = Geflügelpest (aviäre Influenza) | nd = Newcastle-Krankheit",
@@ -370,8 +370,8 @@
       "subtyp": "APMV-1",
       "festgestellt_am": "2026-03-20",
       "quelle": "https://www.agrar-presseportal.de/landwirtschaft/tier/weitere-ausbrueche-der-newcastle-disease-festgestellt-42751.html",
-      "hinweis": null,
-      "aufgehoben_am": null
+      "hinweis": "Aufhebung: letzte ND-Überwachungszone im LK Märkisch-Oderland am 01.06.2026 aufgehoben (lt. Aufhebungs-AV LK MOL vom 30.06.2026): https://www.maerkisch-oderland.de/_Resources/Persistent/c/3/8/e/c38e7140c8c5016f3043ebfa1d625e995abd0296/Aufh.%20AV%20ND%20v.%2030.06.2026.pdf",
+      "aufgehoben_am": "2026-06-01"
     },
     {
       "id": "nd-20260320-12061-lds-1",
