@@ -1,7 +1,7 @@
 {
   "meta": {
     "demo": false,
-    "stand": "2026-11-16T05:58:28+01:00",
+    "stand": "2026-11-17T05:57:18+01:00",
     "hinweis": "Abgleich mit FLI-Risikoeinschätzung vom 06.11.2026 sowie Landes- und Kreismeldungen. ND 2026: Bayern vollständig (LGL), Brandenburg bis 31.03.2026; spätere ND-Ausbrüche in Brandenburg (April/Mai) noch unvollständig. Wildvogelfälle nur, soweit ein Landkreis genannt ist.",
     "felder": {
       "seuche": "hpai = Geflügelpest (aviäre Influenza) | nd = Newcastle-Krankheit",
@@ -14,6 +14,54 @@
     }
   },
   "faelle": [
+    {
+      "id": "gp-20261116-07211-trier",
+      "ags": "07211",
+      "seuche": "hpai",
+      "kategorie": "wildvogel",
+      "tierart": "Schwan, Trier",
+      "subtyp": "H5N1",
+      "festgestellt_am": "2026-11-16",
+      "aufgehoben_am": null,
+      "quelle": "https://www.proplanta.de/agrar-nachrichten/tier/erster-gefluegelpest-fall-in-rheinland-pfalz-bestaetigt_article1794874665.html",
+      "hinweis": "Datum ungefähr: FLI-Bestätigung laut LUA Rheinland-Pfalz am 16.11.2026 gemeldet (dpa); erster bestätigter Fall in RLP diese Saison. Subtyp H5N1 laut LUA-Befund vor FLI-Bestätigung. Siehe auch https://www.wochenblatt-reporter.de/c-ratgeber/vogelgrippe-in-trier-bestaetigt-das-gilt-fuer-gefluegelhalter_a942725"
+    },
+    {
+      "id": "gp-20261113-01058-bargstall",
+      "ags": "01058",
+      "seuche": "hpai",
+      "kategorie": "gefluegel",
+      "tierart": "Geflügelhaltung (Nutzgeflügel), Gemeinde Bargstall",
+      "subtyp": "H5",
+      "festgestellt_am": "2026-11-13",
+      "aufgehoben_am": null,
+      "quelle": "https://kropp.de/wp-content/uploads/2026/11/16.11.2026-091517-AI-2026-Ausbruch-RD-Bargstall-16.11.2026-0116C7F4.docx-Sonstiges.pdf",
+      "hinweis": "Amtlich festgestellt am 13.11.2026 (laut Allgemeinverfügung Kreis Schleswig-Flensburg vom 16.11.2026); Überwachungszone reicht in den Kreis Schleswig-Flensburg (Erfde, Meggerdorf, Tetenhusen, Tielen). Subtyp nicht angegeben. Siehe https://kropp.de/2026/11/16/bekanntmachung-der-anordnung-zum-schutz-gegen-die-gefluegelpest-vom-16-11-2026/"
+    },
+    {
+      "id": "nd-20261113-09678-gerolzhofen",
+      "ags": "09678",
+      "seuche": "nd",
+      "kategorie": "wildvogel",
+      "tierart": "Mehrere tote Stadttauben, Gerolzhofen (Altstadt)",
+      "subtyp": "APMV-1 (Taubentyp)",
+      "festgestellt_am": "2026-11-13",
+      "aufgehoben_am": null,
+      "quelle": "https://sw1.news/lokales/newcastle-krankheit-bei-wild-lebenden-tauben-in-gerolzhofen-festgestelltk",
+      "hinweis": "Datum ungefähr: Meldung vom 13.11.2026, Feststellungsdatum nicht genannt. Laborbefund auf Veranlassung des Veterinäramts Schweinfurt. Newcastle-Krankheit, nicht HPAI."
+    },
+    {
+      "id": "nd-20261115-09573-rosstal",
+      "ags": "09573",
+      "seuche": "nd",
+      "kategorie": "wildvogel",
+      "tierart": "Tote Stadttaube, Roßtal (Bahnhof)",
+      "subtyp": "APMV-1 (Taubentyp)",
+      "festgestellt_am": "2026-11-15",
+      "aufgehoben_am": null,
+      "quelle": "https://fuerthaktuell.de/rosstal/13464/erreger-der-newcastle-krankheit-bei-toter-taube-in-rosstal-nachgewiesen",
+      "hinweis": "Datum ungefähr: Nachweis durch LGL im November 2026, Mitteilung des Landratsamts Fürth am 15.11.2026. Newcastle-Krankheit, nicht HPAI."
+    },
     {
       "id": "gp-20261112-12073-kutzerow",
       "ags": "12073",
