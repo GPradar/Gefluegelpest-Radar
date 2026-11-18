@@ -1,7 +1,7 @@
 {
   "meta": {
     "demo": false,
-    "stand": "2026-11-17T05:57:18+01:00",
+    "stand": "2026-11-18T05:57:04+01:00",
     "hinweis": "Abgleich mit FLI-Risikoeinschätzung vom 06.11.2026 sowie Landes- und Kreismeldungen. ND 2026: Bayern vollständig (LGL), Brandenburg bis 31.03.2026; spätere ND-Ausbrüche in Brandenburg (April/Mai) noch unvollständig. Wildvogelfälle nur, soweit ein Landkreis genannt ist.",
     "felder": {
       "seuche": "hpai = Geflügelpest (aviäre Influenza) | nd = Newcastle-Krankheit",
@@ -192,6 +192,18 @@
       "quelle": "https://www.topagrar.com/gefluegel/schleswig-holstein-verhangt-landesweite-schutzmassnahmen-drei-vogelgrippefallen-20030581.html",
       "hinweis": "Datum ungefähr: Meldung vom 26.10.2026, genaues Feststellungsdatum nicht veröffentlicht (Ausbrüche in SH seit 21.10.).",
       "seuche": "hpai"
+    },
+    {
+      "id": "nd-20261026-09273-langquaid",
+      "ags": "09273",
+      "seuche": "nd",
+      "kategorie": "wildvogel",
+      "tierart": "Zwei tote wildlebende Tauben, Langquaid (Marktplatz)",
+      "subtyp": "APMV-1 (Taubentyp)",
+      "festgestellt_am": "2026-10-26",
+      "aufgehoben_am": null,
+      "quelle": "https://www.landkreis-kelheim.de/landratsamt/meldungen/verendete-tauben-paramyxovirus-im-landkreis-kelheim-nachgewiesen",
+      "hinweis": "Untersuchung LGL Oberschleißheim, FLI-Bestätigung am 26.10.2026 (Pressemitteilung LRA Kelheim vom 27.10.2026). Keine Sperrzonen angeordnet. Newcastle-Krankheit, nicht HPAI."
     },
     {
       "id": "gp-20261026-01054-hallig",
