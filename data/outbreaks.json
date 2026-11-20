@@ -1,7 +1,7 @@
 {
   "meta": {
     "demo": false,
-    "stand": "2026-11-19T05:54:35+01:00",
+    "stand": "2026-11-20T05:54:29+01:00",
     "hinweis": "Abgleich mit FLI-Risikoeinschätzung vom 06.11.2026 sowie Landes- und Kreismeldungen. ND 2026: Bayern vollständig (LGL), Brandenburg bis 31.03.2026; spätere ND-Ausbrüche in Brandenburg (April/Mai) noch unvollständig. Wildvogelfälle nur, soweit ein Landkreis genannt ist.",
     "felder": {
       "seuche": "hpai = Geflügelpest (aviäre Influenza) | nd = Newcastle-Krankheit",
@@ -720,6 +720,30 @@
       "aufgehoben_am": null,
       "quelle": "https://www.gefluegelnews.de/article/geflugelpest-breitet-sich-weiter-aus-aktuelle-falle-im-uberblick",
       "hinweis": "Datum ungefähr: Meldung vom 18.11.2026 (Geflügelpest-Ticker gefluegelnews.de). Wegen geringer Bestandsgröße keine Sperrzonen eingerichtet. Amtliche Kreis-Quelle noch nicht gefunden."
+    },
+    {
+      "id": "gp-20261119-03359-drochtersen",
+      "ags": "03359",
+      "seuche": "hpai",
+      "kategorie": "gefluegel",
+      "tierart": "Legehennen (100 verendet, weitere 170 getötet), Gemeinde Drochtersen",
+      "subtyp": "HPAI (Subtyp nicht genannt)",
+      "festgestellt_am": "2026-11-19",
+      "aufgehoben_am": null,
+      "quelle": "https://www.landkreis-stade.de/portal/meldungen/gefluegelpest-ausbruch-in-drochtersen-901009216-20350.html?rubrik=901000006",
+      "hinweis": "Datum ungefähr: amtliche Feststellung durch Veterinäramt LK Stade, Meldung vom 19.11.2026. Schutzzone 3 km, Überwachungszone 10 km ab 20.11.2026."
+    },
+    {
+      "id": "gp-20261118-05170-alpen",
+      "ags": "05170",
+      "seuche": "hpai",
+      "kategorie": "wildvogel",
+      "tierart": "Stockente (erlegt), Alpen-Menzelen",
+      "subtyp": "H5N1",
+      "festgestellt_am": "2026-11-18",
+      "aufgehoben_am": null,
+      "quelle": "https://www.proplanta.de/agrar-nachrichten/tier/erster-gefluegelgrippe-fall-in-nrw_article1795000558.html",
+      "hinweis": "Datum ungefähr: FLI-Nachweis, Mitteilung Kreis Wesel am 18.11.2026; Ente am 05.11.2026 erlegt. Erster HPAI-Fall der Saison in NRW. Keine Sperrzonen."
     }
   ]
 }
